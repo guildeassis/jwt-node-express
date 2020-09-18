@@ -1,0 +1,29 @@
+{
+    "name": "jwt-node-express",
+    "version": "0.1",
+    "description": "A node library with functions and middleware for express.",
+    "keywords": [
+      "auth",
+      "authentication",
+      "jwt",
+      "token"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/guildeassis/jwt-node-express.git"
+    },
+    "bugs": {
+      "url": "http://github.com/guildeassis/jwt-node-express/issues"
+    },
+    "author": {
+      "name": "guildeassis"
+    },
+    "license": "MIT",
+    "main": "./src/index.js",
+    "dependencies": {
+      "jsonwebtoken": "^8.5.1"
+    },
+    "engines": {
+      "node": ">= 8.0.0"
+    }
+  }

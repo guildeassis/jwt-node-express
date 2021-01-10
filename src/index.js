@@ -1,12 +1,30 @@
 const jwt = require('jsonwebtoken');
 
-module.exports = function(options) {
+function isJson(item) {
+    item = typeof item !== "string"
+        ? JSON.stringify(item)
+        : item;
+
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        return false;
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return true;
+    }
+
+    return false;
+}
+
+module.exports = function (options) {
     var module = {};
     var secret = options.secret;
     var expiresIn = options.expiresIn;
 
     // Check to make sure header is not undefined, if so, return Forbidden (403)
-    module.veriyJwtMW = (req, res, next) => {
+    module.verifyMW = (req, res, next) => {
         const header = req.headers['authorization'];
         if (typeof header !== 'undefined') {
             const bearer = header.split(' ');
@@ -23,18 +41,23 @@ module.exports = function(options) {
     }
 
     // Create a token
-    module.createToken = function(id) {
-        return new Promise((resolve, reject) => { 
-            jwt.sign({ id: id }, secret, { expiresIn: expiresIn }, (err, token) => {
-                if (err) { reject("err"); }
-                else { resolve(token); }
-            });
+    module.sign = function (params) {
+        return new Promise((resolve, reject) => {
+            if (isJson(params)) {
+                jwt.sign(params, secret, { expiresIn: expiresIn }, (err, token) => {
+                    if (err) { reject(err); }
+                    else { resolve(token); }
+                });
+            }
+            else {
+                reject("Invalid json");
+            }
         });
     }
 
     // Verify if a token is valid (for example, if is not expired)
-    module.veriyJwt = function(token) {
-        return new Promise((resolve, reject) => { 
+    module.verify = function (token) {
+        return new Promise((resolve, reject) => {
             jwt.verify(token, secret, (err, jwtData) => {
                 if (err) { reject(err); }
                 else { resolve(jwtData); }
